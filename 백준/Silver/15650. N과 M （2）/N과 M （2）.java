@@ -1,53 +1,42 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 public class Main {
 
-	public static StringBuilder sb = new StringBuilder();
+	public static int N;
+	public static int R;
+	public static int[] nums;
+	public static StringBuilder sb;
 
-	public static void backTracking(int n, int m, boolean check[], int cnt, String s) {
-		if (n == 0)
-			return;
+	public static void combination(int cnt, int start) {
 
-		if (cnt == m) {
-			sb.append(s + "\n");
+		if (cnt == R) {
+			for (int n : nums) {
+				sb.append(n + " ");
+			}
+			sb.append("\n");
+
 			return;
 		}
-		for (int i = 1; i <= n; i++) {
-			if (!check[i] && cnt < m) {
-				if (cnt == 0) {
-					String s2 = s;
-					s += i;
-					check[i] = true;
-					backTracking(n, m, check, cnt + 1, s);
-					check[i] = false;
-					s = s2;	
-				}
-				else {
-					if (Integer.parseInt("" + s.charAt(s.length() - 1)) < i) {
-						String s2 = s;
-						
-						s += " " + i;
-						check[i] = true;
-						backTracking(n, m, check, cnt + 1, s);
-						check[i] = false;
-						s = s2;
-					}
-				}
-			}
+
+		for (int i = start; i <= N; i++) {
+			nums[cnt] = i;
+			combination(cnt + 1, i + 1);
 		}
 
 	}
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
+	public static void main(String[] args) throws Exception {
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		String[] split = in.readLine().split(" ");
 
-		int n = sc.nextInt();
-		int m = sc.nextInt();
+		N = Integer.parseInt(split[0]);
+		R = Integer.parseInt(split[1]);
+		nums = new int[R];
+		sb = new StringBuilder();
 
-		boolean check[] = new boolean[n + 1];
-		String s = "";
+		combination(0, 1);
 
-		backTracking(n, m, check, 0, s);
 		System.out.println(sb);
 	}
 
