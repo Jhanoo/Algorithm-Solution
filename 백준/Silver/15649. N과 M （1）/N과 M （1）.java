@@ -1,79 +1,51 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 public class Main {
 
-	public static class BackTracking {
-		StringBuilder sb;
-		int t[];
-		int n, m, v, cnt = 0;
+	public static int N;
+	public static int R;
+	public static boolean[] isSelected;
+	public static int[] nums;
+	public static StringBuilder sb;
 
-		public BackTracking(int n, int m, int t[], int v, int cnt, StringBuilder sb) {
-			this.n = n;
-			this.m = m;
-			this.t = new int[n + 1];
-			for (int i = 0; i < n; i++)
-				this.t[i + 1] = t[i + 1];
-			this.v = v;
-			this.t[v] = 1;
-			this.cnt = cnt;
-			this.sb = new StringBuilder();
-			this.sb.append(sb);
+	public static void permutation(int cnt) {
+
+		if (cnt == R) {
+			for (int n : nums)
+				sb.append(n + " ");
+			sb.append("\n");
+			return;
 		}
 
-		public void tracing() {
-			int check = 0;
-			if (cnt == 0) {
-				sb.append(v);
+		for (int i = 1; i <= N; i++) {
+
+			if (isSelected[i] == true) {
+				continue;
 			}
-			int i = 0;
-			for (i = 1; i <= n && cnt < m; i++) {
 
-				if (t[i] == 1)
-					continue;
-				if (cnt > 0 && check == 0) {
-					sb.append(" " + v);
-					check = 1;
-				}
-				cnt++;
+			nums[cnt] = i;
+			isSelected[i] = true;
+			permutation(cnt + 1);
+			isSelected[i] = false;
 
-				if (cnt == m) {
-					System.out.println(sb);
-					break;
-				}
-
-				BackTracking child = new BackTracking(n, m, t, i, cnt, sb);
-				child.tracing();
-				if (cnt != m)
-					cnt--;
-			}
-			if (i == n+1) {
-				if (cnt > 0 && check == 0) {
-					sb.append(" " + v);
-					check = 1;
-				}
-				cnt++;
-
-				if (cnt == m) {
-					System.out.println(sb);
-				}
-			}
 		}
+
 	}
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
+	public static void main(String[] args) throws Exception {
 
-		int n = sc.nextInt();
-		int m = sc.nextInt();
-		sc.close();
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		String[] split = in.readLine().split(" ");
 
-		int t[] = new int[n + 1];
-		BackTracking bt;
-		StringBuilder sb = new StringBuilder();
-		for (int i = 1; i <= n; i++) {
-			bt = new BackTracking(n, m, t, i, 0, sb);
-			bt.tracing();
-		}
+		N = Integer.parseInt(split[0]);
+		R = Integer.parseInt(split[1]);
+		isSelected = new boolean[N + 1];
+		nums = new int[R];
+		sb = new StringBuilder();
+
+		permutation(0);
+		System.out.println(sb);
 	}
 
 }
