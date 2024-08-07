@@ -8,10 +8,8 @@ public class Main {
 	public static int N;
 	public static int M;
 	public static List<CCTV> cctvs;
-	public static int[] nums;
 	public static int[][] map;
 	public static int min = 64;
-	public static int cctvNum = 0;
 
 	public static int up = 8;
 	public static int down = 4;
@@ -164,7 +162,7 @@ public class Main {
 					break;
 				}
 
-				if (map[k][row] <= 0) {
+				if (map[k][row] < 0) {
 					map[k][row] += 1;
 				}
 			}
@@ -176,7 +174,7 @@ public class Main {
 					break;
 				}
 
-				if (map[k][row] <= 0) {
+				if (map[k][row] < 0) {
 					map[k][row] += 1;
 				}
 			}
@@ -188,7 +186,7 @@ public class Main {
 					break;
 				}
 
-				if (map[col][k] <= 0) {
+				if (map[col][k] < 0) {
 					map[col][k] += 1;
 				}
 			}
@@ -200,7 +198,7 @@ public class Main {
 					break;
 				}
 
-				if (map[col][k] <= 0) {
+				if (map[col][k] < 0) {
 					map[col][k] += 1;
 				}
 			}
