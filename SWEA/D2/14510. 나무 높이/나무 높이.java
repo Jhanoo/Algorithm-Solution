@@ -37,7 +37,7 @@ public class Solution {
 				cntTwo += a[i] / 2;
 			}
 
-			if (cntOne + 2 < cntTwo) {
+			if (cntOne + 2 <= cntTwo) {
 				int mok = (cntTwo - cntOne) / 3;
 				int nameoge = (cntTwo - cntOne) % 3 > 1 ? 1 : 0;
 
