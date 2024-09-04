@@ -58,8 +58,6 @@ public class Solution {
 				a[i] = new Pos(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
 			}
 
-			int visited = 1; // company는 부터 시작이므로 방문처리 00...01
-
 			int result = dfs(0, 1);
 
 			sb.append(result);
