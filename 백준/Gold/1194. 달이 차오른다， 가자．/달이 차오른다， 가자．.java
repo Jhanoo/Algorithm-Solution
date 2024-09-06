@@ -1,113 +1,112 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.StringTokenizer;
- 
+
 public class Main {
- 
-    public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    public static int[] dirX = new int[] { 0, 0, -1, 1 };
-    public static int[] dirY = new int[] { 1, -1, 0, 0 };
-    public static char[][] map;
-    public static boolean[][][] visited;
-    public static Node start;
-    public static int N, M, ans = Integer.MAX_VALUE;
- 
-    public static void main(String[] args) throws Exception {
- 
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-        map = new char[N][M];
-        visited = new boolean[64][N][M];
- 
-        for (int i = 0; i < N; i++) {
-            String str = br.readLine();
-            for (int j = 0; j < M; j++) {
-                map[i][j] = str.charAt(j);
-                if (map[i][j] == '0')
-                    start = new Node(i, j, 0, 0);
-            }
-        }
-        System.out.println(bfs());
-    }
- 
-    public static int bfs() {
- 
-        Queue<Node> q = new LinkedList<Node>();
-        q.offer(new Node(start.row, start.col, 0, 0));
-        visited[0][start.row][start.col] = true;
- 
-        while (!q.isEmpty()) {
- 
-            Node node = q.poll();
-            int row = node.row;
-            int col = node.col;
-            int cnt = node.cnt;
-            int key = node.key;
- 
-            if (map[row][col] == '1') {
-                return cnt;
-            }
- 
-            for (int i = 0; i < 4; i++) {
- 
-                int nr = row + dirX[i];
-                int nc = col + dirY[i];
- 
-                if (isBoundary(nr, nc) && map[nr][nc] != '#' && !visited[key][nr][nc]) {
-                    if (map[nr][nc] == '.' || map[nr][nc] == '0' || map[nr][nc] == '1') {
-                        visited[key][nr][nc] = true;
-                        q.offer(new Node(nr, nc, cnt + 1, key));
- 
-                    } else if (map[nr][nc] >= 'a' && map[nr][nc] <= 'z') {
-                        int newKey = 1 << (map[nr][nc] - 'a');
-                        newKey = newKey | key;
-                        if (!visited[newKey][nr][nc]) {
-                            visited[key][nr][nc] = true;
-                            visited[newKey][nr][nc] = true;
-                            q.offer(new Node(nr, nc, cnt + 1, newKey));
-                        }
- 
-                    } else if (map[nr][nc] >= 'A' && map[nr][nc] <= 'Z') {
- 
-                        int door = 1 << (map[nr][nc] - 'A');
-                        if ((key & door) > 0) {
-                            visited[key][nr][nc] = true;
-                            q.offer(new Node(nr, nc, cnt + 1, key));
-                        }
-                    }
-                }
-            }
- 
-        }
-        return -1;
-    }
- 
-    public static boolean isBoundary(int row, int col) {
-        return (row >= 0 && row < N) && (col >= 0 && col < M);
-    }
- 
-}
- 
-class Node {
- 
-    int row;
-    int col;
-    int cnt;
-    int key;
- 
-    public Node(int row, int col, int cnt, int key) {
-        this.row = row;
-        this.col = col;
-        this.cnt = cnt;
-        this.key = key;
-    }
- 
+
+	public static class Pos {
+		int x, y;
+		int keys;
+		int cnt;
+
+		public Pos(int x, int y, int keys, int cnt) {
+			super();
+			this.x = x;
+			this.y = y;
+			this.keys = keys;
+			this.cnt = cnt;
+		}
+
+	}
+
+	public static int N, M;
+	public static char[][] map;
+	public static boolean[][][] visited;
+
+	public static void main(String[] args) throws Exception {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+
+		map = new char[N][M];
+		visited = new boolean[N][M][64];
+
+		Pos start = null;
+
+		for (int i = 0; i < N; i++) {
+			String s = br.readLine();
+			for (int j = 0; j < M; j++) {
+				map[i][j] = s.charAt(j);
+				if (map[i][j] == '0') {
+					start = new Pos(j, i, 0, 0);
+				}
+			}
+		}
+
+		System.out.println(bfs(start));
+	}
+
+	public static int bfs(Pos start) {
+		Queue<Pos> q = new ArrayDeque<>();
+
+		q.offer(start);
+		visited[start.y][start.x][0] = true;
+
+		int[] dx = { 1, 0, -1, 0 };
+		int[] dy = { 0, -1, 0, 1 };
+
+		while (!q.isEmpty()) {
+			Pos tmp = q.poll();
+			int x = tmp.x;
+			int y = tmp.y;
+			int keys = tmp.keys;
+			int cnt = tmp.cnt;
+
+			if (map[y][x] == '1') {
+				return cnt;
+			}
+
+			for (int i = 0; i < 4; i++) {
+				int moveX = x + dx[i];
+				int moveY = y + dy[i];
+
+				if (0 <= moveX && moveX < M && 0 <= moveY && moveY < N && !visited[moveY][moveX][keys]
+						&& map[moveY][moveX] != '#') {
+
+					if (map[moveY][moveX] == '.' || map[moveY][moveX] == '0' || map[moveY][moveX] == '1') {
+						q.offer(new Pos(moveX, moveY, keys, cnt + 1));
+						visited[moveY][moveX][keys] = true;
+					}
+					// 이동하려는 위치가 문인 경우
+					else if ('A' <= map[moveY][moveX] && map[moveY][moveX] <= 'F') {
+
+						int door = 1 << (map[moveY][moveX] - 'A');
+						// 열쇠가 있으면
+						if ((door & keys) > 0) {
+							q.offer(new Pos(moveX, moveY, keys, cnt + 1));
+							visited[moveY][moveX][keys] = true;
+						}
+
+					}
+					// 이동하려는 위치가 열쇠인 경우
+					else if ('a' <= map[moveY][moveX] && map[moveY][moveX] <= 'f') {
+
+						int key = 1 << (map[moveY][moveX] - 'a');
+						q.offer(new Pos(moveX, moveY, keys | key, cnt + 1));
+						visited[moveY][moveX][keys | key] = true;
+						visited[moveY][moveX][keys] = true;
+					}
+
+				}
+			}
+		}
+
+		return -1;
+	}
+
 }
