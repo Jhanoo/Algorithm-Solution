@@ -1,33 +1,12 @@
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.PriorityQueue;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Solution {
 
-	public static boolean[][] edges;
-	public static int[] cc;
-
-	public static final int INF = Integer.MAX_VALUE;
-
-	public static class Node implements Comparable<Node> {
-		int v;
-		int dist;
-
-		public Node(int v, int dist) {
-			super();
-			this.v = v;
-			this.dist = dist;
-		}
-
-		@Override
-		public int compareTo(Node o) {
-			return this.dist - o.dist;
-		}
-	}
+	public static int[][] dp;
+	public static final int INF = 987654321;
 
 	public static void main(String[] args) throws Exception {
 
@@ -43,50 +22,43 @@ public class Solution {
 			StringTokenizer st = new StringTokenizer(br.readLine(), " ");
 
 			int N = Integer.parseInt(st.nextToken());
-			edges = new boolean[N][N];
-			cc = new int[N];
+			dp = new int[N][N];
 
 			for (int i = 0; i < N; i++) {
 				for (int j = 0; j < N; j++) {
-					edges[i][j] = Integer.parseInt(st.nextToken()) == 1 ? true : false;
+
+					if (i == j) {
+						st.nextToken();
+						continue;
+					}
+
+					dp[i][j] = Integer.parseInt(st.nextToken()) == 1 ? 1 : INF;
 				}
 			}
 
-			for (int i = 0; i < N; i++) {
+			for (int k = 0; k < N; k++) {
+				for (int i = 0; i < N; i++) {
 
-				int[] dp = new int[N];
-				Arrays.fill(dp, INF);
-				
-				// Dijkstra
-				PriorityQueue<Node> pq = new PriorityQueue<Node>();
-
-				pq.offer(new Node(i, 0));
-				dp[i] = 0;
-
-				while (!pq.isEmpty()) {
-					Node tmp = pq.poll();
+					if (k == i)
+						continue;
 
 					for (int j = 0; j < N; j++) {
 
-						if (edges[tmp.v][j]) {
+						if (j == i || j == k)
+							continue;
 
-							if (dp[j] <= dp[tmp.v] + 1) {
-								continue;
-							}
-							pq.offer(new Node(j, tmp.dist + 1));
-							dp[j] = dp[tmp.v] + 1;
-						}
+						dp[i][j] = Math.min(dp[i][k] + dp[k][j], dp[i][j]);
 					}
 				}
-
-				for (int dist : dp)
-					cc[i] += dist;
-
 			}
 
 			int min = INF;
-			for (int i : cc) {
-				min = Math.min(i, min);
+			for (int i = 0; i < N; i++) {
+				int sum = 0;
+				for (int j = 0; j < N; j++) {
+					sum += dp[i][j];
+				}
+				min = Math.min(min, sum);
 			}
 
 			sb.append(min);
