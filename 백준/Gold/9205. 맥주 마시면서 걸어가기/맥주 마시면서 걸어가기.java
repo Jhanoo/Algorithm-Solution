@@ -34,10 +34,10 @@ public class Main {
 				a[i] = new Pos(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
 			}
 
-//			if (getDist(a[0], a[n + 1]) <= 1000) {
-//				System.out.println("happy");
-//				return;
-//			}
+			if (getDist(a[0], a[n + 1]) <= 1000) {
+				System.out.println("happy");
+				continue;
+			}
 
 			boolean[] visited = new boolean[n + 2];
 			Queue<Pos> q = new ArrayDeque<>();
