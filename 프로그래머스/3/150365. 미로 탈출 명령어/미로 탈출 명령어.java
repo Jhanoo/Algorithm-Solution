@@ -64,17 +64,18 @@ class Solution {
         
         goLeft(p); // 왼쪽으로 더 갈 수 있으면 더 가고 나중에 오른쪽으로 가기
         
+        goRight(p); // rlrl... 반복
+        
         // 오른쪽으로
         if (dy > 0) {
-            goRight(p); // rlrl... 반복
             p.y += dy;
+            
             while (dy != 0) {
                 path += "r";
                 dy--;
             }
         }
         
-        goRight(p);
         
         path += suffix; // 쌓아온거 합치기
         
