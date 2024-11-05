@@ -191,14 +191,14 @@ public class Main {
 			return a.get(k - 1).name;
 		}
 
-		public int sum(int k) {
+		public long sum(int k) {
 
 			if (nodes.size() == 0)
 				return 0;
 
 			List<Node> a = new ArrayList<>(nodes);
 
-			int result = 0;
+			long result = 0;
 			for (Node tmp : a) {
 				if (tmp.value <= k) {
 					result += tmp.value;
@@ -272,7 +272,7 @@ public class Main {
 		return t.rank(k);
 	}
 
-	private static int sum(int k) {
+	private static long sum(int k) {
 		return t.sum(k);
 	}
 
