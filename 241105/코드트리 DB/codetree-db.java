@@ -174,6 +174,18 @@ public class Main {
 			if (a.length == 2)
 				return 0;
 
+			Node prev = a[0].prevName;
+			Node next = a[0].nextName;
+
+			if (prev != null && next != null) {
+				prev.nextName = next;
+				next.prevName = prev;
+			} else if (prev != null && next == null) {
+				prev.nextName = null;
+			} else if (prev == null && next != null) {
+				next.prevName = null;
+			}
+
 			nodes.remove(a[0]);
 
 			return a[0].value;
