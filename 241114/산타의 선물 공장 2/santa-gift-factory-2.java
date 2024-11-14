@@ -52,7 +52,7 @@ public class Main {
 
 				result = moveAll(src, dst);
 				// sb.append(result).append("\n");
-				System.out.println(reuslt);
+				System.out.println(result);
 
 				break;
 
@@ -62,7 +62,7 @@ public class Main {
 
 				result = changeForward(src, dst);
 				// sb.append(result).append("\n");
-				System.out.println(reuslt);
+				System.out.println(result);
 
 				break;
 
@@ -72,7 +72,7 @@ public class Main {
 
 				result = divide(src, dst);
 				// sb.append(result).append("\n");
-				System.out.println(reuslt);
+				System.out.println(result);
 
 				break;
 
@@ -81,7 +81,7 @@ public class Main {
 
 				result = getPresentInfo(num);
 				// sb.append(result).append("\n");
-				System.out.println(reuslt);
+				System.out.println(result);
 
 				break;
 
@@ -90,7 +90,7 @@ public class Main {
 
 				result = getBeltInfo(num);
 				// sb.append(result).append("\n");
-				System.out.println(reuslt);
+				System.out.println(result);
 				
 				break;
 
