@@ -149,33 +149,37 @@ public class Main {
 	private static int changeForward(int src, int dst) {
 
 		Integer a = belts[src].pollFirst();
+		a = a == null ? -1 : a;
 		Integer b = belts[dst].pollFirst();
+		b = b == null ? -1 : b;
+
+		Integer next = belts[dst].peekFirst();
+		if (next != null)
+			presents[next].prev = a;
 
 		// 선물이 있으면 교체 후 벨트 갱신
-		if (a != null) {
-			Integer next = belts[dst].peekFirst();
+		if (a != -1) {
 			belts[dst].offerFirst(a);
 
 			if (next != null) {
-				presents[next].prev = a;
 				presents[a].next = next;
 			} else {
 				presents[a].next = -1;
-				presents[a].prev = -1;
 			}
 			presents[a].belt = dst;
 		}
 
-		if (b != null) {
-			Integer next = belts[src].peekFirst();
+		next = belts[src].peekFirst();
+		if (next != null)
+			presents[next].prev = b;
+
+		if (b != -1) {
 			belts[src].offerFirst(b);
 
 			if (next != null) {
-				presents[next].prev = b;
 				presents[b].next = next;
 			} else {
 				presents[b].next = -1;
-				presents[b].prev = -1;
 			}
 			presents[b].belt = src;
 		}
