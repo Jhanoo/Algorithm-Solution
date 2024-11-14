@@ -28,7 +28,7 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
+		// StringBuilder sb = new StringBuilder();
 
 		int q = Integer.parseInt(br.readLine());
 
@@ -99,7 +99,7 @@ public class Main {
 			}
 		}
 
-		System.out.println(sb);
+		// System.out.println(sb);
 	}
 
 	// 100
