@@ -1,9 +1,25 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Stack;
 
 public class Main {
 
-	static HashMap<Integer, Integer> map;
+	static class Present {
+		int prev;
+		int next;
+		int belt;
+
+		public Present(int belt, int prev, int next) {
+			super();
+			this.belt = belt;
+			this.prev = prev;
+			this.next = next;
+		}
+	}
+
+	static Present[] presents;
 	static Deque<Integer>[] belts;
 	static int N, M;
 
@@ -25,7 +41,6 @@ public class Main {
 				M = Integer.parseInt(cmd[2]); // 선물 수
 
 				init(cmd);
-
 				break;
 
 			case "200":
@@ -52,6 +67,7 @@ public class Main {
 
 				result = divide(src, dst);
 				sb.append(result).append("\n");
+
 				break;
 
 			case "500":
@@ -80,7 +96,7 @@ public class Main {
 
 	private static void init(String[] cmd) {
 		belts = new ArrayDeque[N + 1];
-		map = new HashMap<>();
+		presents = new Present[M + 1];
 
 		for (int i = 1; i <= N; i++) {
 			belts[i] = new ArrayDeque<>();
@@ -88,8 +104,15 @@ public class Main {
 
 		for (int i = 1; i <= M; i++) {
 			int belt = Integer.parseInt(cmd[2 + i]);
+
+			if (belts[belt].isEmpty())
+				presents[i] = new Present(belt, -1, -1);
+			else {
+				int prev = belts[belt].peekLast();
+				presents[i] = new Present(belt, prev, -1);
+				presents[prev].next = i;
+			}
 			belts[belt].offerLast(i);
-			map.put(i, belt);
 		}
 	}
 
@@ -97,9 +120,21 @@ public class Main {
 
 		while (!belts[src].isEmpty()) {
 			int tmp = belts[src].pollLast();
+			int prev = presents[tmp].prev;
+			Integer next = belts[dst].peekFirst();
+			next = next == null ? -1 : next;
 
 			belts[dst].offerFirst(tmp); // 선물 옮기기
-			map.put(tmp, dst); // 선물이 있는 벨트 인덱스 갱신
+
+			if (prev != -1)
+				presents[prev].next = -1;
+
+			if (next != -1)
+				presents[next].prev = tmp;
+
+			presents[tmp].prev = -1;
+			presents[tmp].next = next;
+			presents[tmp].belt = dst;
 		}
 
 		return belts[dst].size();
@@ -112,13 +147,29 @@ public class Main {
 
 		// 선물이 있으면 교체 후 벨트 갱신
 		if (a != null) {
+			Integer next = belts[dst].peekFirst();
 			belts[dst].offerFirst(a);
-			map.put(a, dst);
+
+			if (next != null) {
+				presents[next].prev = a;
+				presents[a].next = next;
+			} else {
+				presents[a].next = -1;
+			}
+			presents[a].belt = dst;
 		}
 
 		if (b != null) {
+			Integer next = belts[src].peekFirst();
 			belts[src].offerFirst(b);
-			map.put(b, src);
+
+			if (next != null) {
+				presents[next].prev = b;
+				presents[b].next = next;
+			} else {
+				presents[b].next = -1;
+			}
+			presents[b].belt = src;
 		}
 
 		return belts[dst].size();
@@ -135,11 +186,24 @@ public class Main {
 			stack.add(tmp);
 		}
 
+		Integer first = belts[src].peekFirst();
+		if (first != null)
+			presents[first].prev = -1;
+
+		if (!stack.isEmpty()) {
+			int tmp = stack.pop();
+			Integer next = belts[dst].peekFirst();
+			presents[tmp].next = next == null ? -1 : next;
+
+			belts[dst].offerFirst(tmp);
+			presents[tmp].belt = dst;
+		}
+
 		while (!stack.isEmpty()) {
 			int tmp = stack.pop();
-			
-			belts[dst].offerFirst(tmp); // 선물 옮기기
-			map.put(tmp, dst); // 선물이 있는 벨트 인덱스 갱신
+
+			belts[dst].offerFirst(tmp);
+			presents[tmp].belt = dst;
 		}
 
 		return belts[dst].size();
@@ -147,23 +211,8 @@ public class Main {
 
 	private static int getPresentInfo(int num) {
 
-		int belt = map.get(num);
-
-		int a = -1;
-		int b = -1;
-		Iterator<Integer> it = belts[belt].iterator();
-
-		while (it.hasNext()) {
-			int tmp = it.next();
-
-			if (tmp == num) {
-				break;
-			}
-			a = tmp;
-		}
-
-		if (it.hasNext())
-			b = it.next();
+		int a = presents[num].prev;
+		int b = presents[num].next;
 
 		return a + b * 2;
 	}
