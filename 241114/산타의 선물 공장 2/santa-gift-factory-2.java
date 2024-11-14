@@ -51,7 +51,8 @@ public class Main {
 				dst = Integer.parseInt(cmd[2]);
 
 				result = moveAll(src, dst);
-				sb.append(result).append("\n");
+				// sb.append(result).append("\n");
+				System.out.println(reuslt);
 
 				break;
 
@@ -60,7 +61,8 @@ public class Main {
 				dst = Integer.parseInt(cmd[2]);
 
 				result = changeForward(src, dst);
-				sb.append(result).append("\n");
+				// sb.append(result).append("\n");
+				System.out.println(reuslt);
 
 				break;
 
@@ -69,7 +71,8 @@ public class Main {
 				dst = Integer.parseInt(cmd[2]);
 
 				result = divide(src, dst);
-				sb.append(result).append("\n");
+				// sb.append(result).append("\n");
+				System.out.println(reuslt);
 
 				break;
 
@@ -77,7 +80,8 @@ public class Main {
 				num = Integer.parseInt(cmd[1]);
 
 				result = getPresentInfo(num);
-				sb.append(result).append("\n");
+				// sb.append(result).append("\n");
+				System.out.println(reuslt);
 
 				break;
 
@@ -85,7 +89,8 @@ public class Main {
 				num = Integer.parseInt(cmd[1]);
 
 				result = getBeltInfo(num);
-				sb.append(result).append("\n");
+				// sb.append(result).append("\n");
+				System.out.println(reuslt);
 				
 				break;
 
