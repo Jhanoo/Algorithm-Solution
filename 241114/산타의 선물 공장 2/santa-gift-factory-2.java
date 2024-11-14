@@ -1,6 +1,8 @@
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.Stack;
 
@@ -41,6 +43,7 @@ public class Main {
 				M = Integer.parseInt(cmd[2]); // 선물 수
 
 				init(cmd);
+
 				break;
 
 			case "200":
@@ -83,7 +86,7 @@ public class Main {
 
 				result = getBeltInfo(num);
 				sb.append(result).append("\n");
-
+				
 				break;
 
 			default:
@@ -94,6 +97,7 @@ public class Main {
 		System.out.println(sb);
 	}
 
+	// 100
 	private static void init(String[] cmd) {
 		belts = new ArrayDeque[N + 1];
 		presents = new Present[M + 1];
@@ -116,6 +120,7 @@ public class Main {
 		}
 	}
 
+	// 200
 	private static int moveAll(int src, int dst) {
 
 		while (!belts[src].isEmpty()) {
@@ -140,6 +145,7 @@ public class Main {
 		return belts[dst].size();
 	}
 
+	// 300
 	private static int changeForward(int src, int dst) {
 
 		Integer a = belts[src].pollFirst();
@@ -175,6 +181,7 @@ public class Main {
 		return belts[dst].size();
 	}
 
+	// 400
 	private static int divide(int src, int dst) {
 		Stack<Integer> stack = new Stack<>();
 
@@ -193,13 +200,21 @@ public class Main {
 		if (!stack.isEmpty()) {
 			int tmp = stack.pop();
 			Integer next = belts[dst].peekFirst();
-			presents[tmp].next = next == null ? -1 : next;
+
+			if (next != null) {
+				presents[tmp].next = next;
+				presents[next].prev = tmp;
+			} else {
+				presents[tmp].next = -1;
+			}
 
 			belts[dst].offerFirst(tmp);
 			presents[tmp].belt = dst;
 		}
 
-		while (!stack.isEmpty()) {
+		while (!stack.isEmpty())
+
+		{
 			int tmp = stack.pop();
 
 			belts[dst].offerFirst(tmp);
@@ -209,6 +224,7 @@ public class Main {
 		return belts[dst].size();
 	}
 
+	// 500
 	private static int getPresentInfo(int num) {
 
 		int a = presents[num].prev;
@@ -217,6 +233,7 @@ public class Main {
 		return a + b * 2;
 	}
 
+	// 600
 	private static int getBeltInfo(int num) {
 
 		Integer a = belts[num].peekFirst();
