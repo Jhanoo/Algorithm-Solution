@@ -161,6 +161,7 @@ public class Main {
 				presents[a].next = next;
 			} else {
 				presents[a].next = -1;
+				presents[a].prev = -1;
 			}
 			presents[a].belt = dst;
 		}
@@ -174,6 +175,7 @@ public class Main {
 				presents[b].next = next;
 			} else {
 				presents[b].next = -1;
+				presents[b].prev = -1;
 			}
 			presents[b].belt = src;
 		}
