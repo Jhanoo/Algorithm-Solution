@@ -28,7 +28,7 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		// StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 
 		int q = Integer.parseInt(br.readLine());
 
@@ -51,8 +51,7 @@ public class Main {
 				dst = Integer.parseInt(cmd[2]);
 
 				result = moveAll(src, dst);
-				// sb.append(result).append("\n");
-				System.out.println(result);
+				sb.append(result).append("\n");
 
 				break;
 
@@ -61,8 +60,7 @@ public class Main {
 				dst = Integer.parseInt(cmd[2]);
 
 				result = changeForward(src, dst);
-				// sb.append(result).append("\n");
-				System.out.println(result);
+				sb.append(result).append("\n");
 
 				break;
 
@@ -71,8 +69,7 @@ public class Main {
 				dst = Integer.parseInt(cmd[2]);
 
 				result = divide(src, dst);
-				// sb.append(result).append("\n");
-				System.out.println(result);
+				sb.append(result).append("\n");
 
 				break;
 
@@ -80,8 +77,7 @@ public class Main {
 				num = Integer.parseInt(cmd[1]);
 
 				result = getPresentInfo(num);
-				// sb.append(result).append("\n");
-				System.out.println(result);
+				sb.append(result).append("\n");
 
 				break;
 
@@ -89,8 +85,7 @@ public class Main {
 				num = Integer.parseInt(cmd[1]);
 
 				result = getBeltInfo(num);
-				// sb.append(result).append("\n");
-				System.out.println(result);
+				sb.append(result).append("\n");
 				
 				break;
 
@@ -99,7 +94,7 @@ public class Main {
 			}
 		}
 
-		// System.out.println(sb);
+		System.out.println(sb);
 	}
 
 	// 100
