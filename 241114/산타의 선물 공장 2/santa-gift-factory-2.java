@@ -125,16 +125,21 @@ public class Main {
 	}
 
 	private static int divide(int src, int dst) {
+		Stack<Integer> stack = new Stack<>();
 
 		int cnt = belts[src].size() / 2;
 
 		for (int i = 0; i < cnt; i++) {
 
 			int tmp = belts[src].pollFirst();
+			stack.add(tmp);
+		}
 
+		while (!stack.isEmpty()) {
+			int tmp = stack.pop();
+			
 			belts[dst].offerFirst(tmp); // 선물 옮기기
 			map.put(tmp, dst); // 선물이 있는 벨트 인덱스 갱신
-
 		}
 
 		return belts[dst].size();
