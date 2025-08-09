@@ -7,16 +7,6 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    static class P {
-        int a;
-        int b;
-
-        P(int a, int b) {
-            this.a = a;
-            this.b = b;
-        }
-    }
-
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
