@@ -45,22 +45,24 @@ public class Main {
         boolean[] visited = new boolean[V + 1];
 
         int answer = 0;
+        int visitedCount = 1;
+
         visited[1] = true;
         for (Edge e : edges[1]) {
             pq.offer(e);
         }
 
-        while (!pq.isEmpty()) {
+        while (!pq.isEmpty() && visitedCount < V) {
             Edge e = pq.poll();
-
             if (visited[e.v]) continue;
 
             visited[e.v] = true;
+            visitedCount++;
             answer += e.w;
 
-            for (Edge ee : edges[e.v]) {
-                if (!visited[ee.v]) {
-                    pq.offer(ee);
+            for (Edge nextEdge : edges[e.v]) {
+                if (!visited[nextEdge.v]) {
+                    pq.offer(nextEdge);
                 }
             }
         }
