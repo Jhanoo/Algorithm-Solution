@@ -20,7 +20,7 @@ public class Main {
             }
 
             List<Integer>[] graph = new ArrayList[N + 1];
-            for (int j = 0; j <= N; j++) {
+            for (int j = 1; j <= N; j++) {
                 graph[j] = new ArrayList<>();
             }
 
@@ -46,6 +46,7 @@ public class Main {
 
             while (!q.isEmpty()) {
                 int u = q.poll();
+                if (u == W) break;
                 for (int v : graph[u]) {
                     dp[v] = Math.max(dp[v], dp[u] + time[v]);
                     inDegree[v]--;
