@@ -1,84 +1,87 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Queue;
+import java.io.*;
+import java.util.*;
 
 public class Main {
 
-	public static void main(String[] args) throws Exception {
+    static final int[] dx = {1, -1, 0, 0};
+    static final int[] dy = {0, 0, 1, -1};
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		int N = Integer.parseInt(br.readLine());
+        int N = Integer.parseInt(br.readLine());
 
-		String a[] = new String[N];
+        char[][] a = new char[N][N];
+        for (int i = 0; i < N; i++) {
+            String s = br.readLine();
+            for (int j = 0; j < N; j++) {
+                a[i][j] = s.charAt(j);
+            }
+        }
 
-		for (int i = 0; i < N; i++) {
-			a[i] = br.readLine();
-		}
+        int[][] visited = new int[N][N];
 
-		sb.append(watch(true, a, N) + " " + watch(false, a, N));
+        int cnt = 0;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (visited[i][j] > 0) continue;
 
-		System.out.println(sb);
-	}
+                Queue<int[]> q = new ArrayDeque<>();
+                q.offer(new int[]{i, j});
+                visited[i][j] = ++cnt;
+                char color = a[i][j];
 
-	public static int watch(boolean watchGreen, String[] a, int N) {
+                while (!q.isEmpty()) {
+                    int[] cur = q.poll();
+                    int y = cur[0];
+                    int x = cur[1];
 
-		int[] dx = { 1, 0, -1, 0 };
-		int[] dy = { 0, -1, 0, 1 };
+                    for (int dir = 0; dir < 4; dir++) {
+                        int nx = x + dx[dir];
+                        int ny = y + dy[dir];
 
-		Queue<Integer> q = new ArrayDeque<>(); // x,y 각각 enqueue
+                        if (nx < 0 || nx >= N || ny < 0 || ny >= N || visited[ny][nx] != 0 || a[ny][nx] != color)
+                            continue;
 
-		q.offer(0); // 초기 x좌표
-		q.offer(0); // 초기 y좌표
+                        visited[ny][nx] = cnt;
+                        q.offer(new int[]{ny, nx});
+                    }
+                }
+            }
+        }
+        int RGB = cnt;
 
-		int cnt = 0;
+        cnt = 0;
+        visited = new int[N][N];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (visited[i][j] > 0) continue;
 
-		int[][] visited = new int[N][N];
+                Queue<int[]> q = new ArrayDeque<>();
+                q.offer(new int[]{i, j});
+                visited[i][j] = ++cnt;
+                char color = a[i][j];
 
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
+                while (!q.isEmpty()) {
+                    int[] cur = q.poll();
+                    int y = cur[0];
+                    int x = cur[1];
 
-				char color = 0;
-				if (visited[i][j] == 0) {
-					q.offer(j); // x
-					q.offer(i); // y
-					color = a[i].charAt(j);
+                    for (int dir = 0; dir < 4; dir++) {
+                        int nx = x + dx[dir];
+                        int ny = y + dy[dir];
 
-					if (!watchGreen && color == 'G')
-						color = 'R';
+                        if (nx < 0 || nx >= N || ny < 0 || ny >= N || visited[ny][nx] != 0) continue;
+                        if ((color == 'B' || a[ny][nx] == 'B') && a[ny][nx] != color) continue;
 
-					visited[i][j] = ++cnt;
-				}
+                        visited[ny][nx] = cnt;
+                        q.offer(new int[]{ny, nx});
+                    }
+                }
+            }
+        }
 
-				while (!q.isEmpty()) {
-					int x = q.poll();
-					int y = q.poll();
-
-					for (int k = 0; k < 4; k++) {
-						int moveX = x + dx[k];
-						int moveY = y + dy[k];
-
-						if (0 <= moveX && moveX < N && 0 <= moveY && moveY < N && visited[moveY][moveX] == 0) {
-							char tmpColor = a[moveY].charAt(moveX);
-
-							if (!watchGreen && tmpColor == 'G')
-								tmpColor = 'R';
-
-							if (tmpColor == color) {
-								q.offer(moveX);
-								q.offer(moveY);
-								visited[moveY][moveX] = cnt;
-							}
-						}
-					}
-				}
-
-			}
-		}
-
-		return cnt;
-	}
-
+        int RG_B = cnt;
+        System.out.println(RGB + " " + RG_B);
+    }
 }
