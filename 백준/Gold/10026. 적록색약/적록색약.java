@@ -3,85 +3,70 @@ import java.util.*;
 
 public class Main {
 
-    static final int[] dx = {1, -1, 0, 0};
-    static final int[] dy = {0, 0, 1, -1};
+    static final int[] dx = {1, 0, -1, 0};
+    static final int[] dy = {0, -1, 0, 1};
 
     public static void main(String[] args) throws Exception {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
 
         int N = Integer.parseInt(br.readLine());
 
-        char[][] a = new char[N][N];
+        String[] a = new String[N];
+
         for (int i = 0; i < N; i++) {
-            String s = br.readLine();
-            for (int j = 0; j < N; j++) {
-                a[i][j] = s.charAt(j);
-            }
+            a[i] = br.readLine();
         }
 
+        sb.append(watch(true, a, N)).append(" ").append(watch(false, a, N));
+
+        System.out.println(sb);
+    }
+
+    public static int watch(boolean watchGreen, String[] a, int N) {
         int[][] visited = new int[N][N];
+        Queue<int[]> q = new ArrayDeque<>();
+        q.offer(new int[]{0, 0});
 
         int cnt = 0;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                if (visited[i][j] > 0) continue;
+                char color = 0;
+                if (visited[i][j] == 0) {
+                    q.offer(new int[]{j, i});
+                    color = a[i].charAt(j);
 
-                Queue<int[]> q = new ArrayDeque<>();
-                q.offer(new int[]{i, j});
-                visited[i][j] = ++cnt;
-                char color = a[i][j];
+                    if (!watchGreen && color == 'G') color = 'R';
 
-                while (!q.isEmpty()) {
-                    int[] cur = q.poll();
-                    int y = cur[0];
-                    int x = cur[1];
-
-                    for (int dir = 0; dir < 4; dir++) {
-                        int nx = x + dx[dir];
-                        int ny = y + dy[dir];
-
-                        if (nx < 0 || nx >= N || ny < 0 || ny >= N || visited[ny][nx] != 0 || a[ny][nx] != color)
-                            continue;
-
-                        visited[ny][nx] = cnt;
-                        q.offer(new int[]{ny, nx});
-                    }
+                    visited[i][j] = ++cnt;
                 }
-            }
-        }
-        int RGB = cnt;
-
-        cnt = 0;
-        visited = new int[N][N];
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                if (visited[i][j] > 0) continue;
-
-                Queue<int[]> q = new ArrayDeque<>();
-                q.offer(new int[]{i, j});
-                visited[i][j] = ++cnt;
-                char color = a[i][j];
 
                 while (!q.isEmpty()) {
                     int[] cur = q.poll();
-                    int y = cur[0];
-                    int x = cur[1];
+                    int x = cur[0];
+                    int y = cur[1];
 
-                    for (int dir = 0; dir < 4; dir++) {
-                        int nx = x + dx[dir];
-                        int ny = y + dy[dir];
+                    for (int k = 0; k < 4; k++) {
+                        int nx = x + dx[k];
+                        int ny = y + dy[k];
 
-                        if (nx < 0 || nx >= N || ny < 0 || ny >= N || visited[ny][nx] != 0) continue;
-                        if ((color == 'B' || a[ny][nx] == 'B') && a[ny][nx] != color) continue;
+                        if (0 <= nx && nx < N && 0 <= ny && ny < N && visited[ny][nx] == 0) {
+                            char tmpColor = a[ny].charAt(nx);
 
-                        visited[ny][nx] = cnt;
-                        q.offer(new int[]{ny, nx});
+                            if (!watchGreen && tmpColor == 'G') tmpColor = 'R';
+
+                            if (tmpColor == color) {
+                                q.offer(new int[]{nx, ny});
+                                visited[ny][nx] = cnt;
+                            }
+                        }
                     }
                 }
             }
         }
 
-        int RG_B = cnt;
-        System.out.println(RGB + " " + RG_B);
+        return cnt;
     }
+
 }
