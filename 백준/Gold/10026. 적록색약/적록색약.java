@@ -1,84 +1,72 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Queue;
+import java.io.*;
+import java.util.*;
 
 public class Main {
 
-	public static void main(String[] args) throws Exception {
+    static final int[] dx = {1, 0, -1, 0};
+    static final int[] dy = {0, -1, 0, 1};
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
+    public static void main(String[] args) throws Exception {
 
-		int N = Integer.parseInt(br.readLine());
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
 
-		String a[] = new String[N];
+        int N = Integer.parseInt(br.readLine());
 
-		for (int i = 0; i < N; i++) {
-			a[i] = br.readLine();
-		}
+        String[] a = new String[N];
 
-		sb.append(watch(true, a, N) + " " + watch(false, a, N));
+        for (int i = 0; i < N; i++) {
+            a[i] = br.readLine();
+        }
 
-		System.out.println(sb);
-	}
+        sb.append(watch(true, a, N)).append(" ").append(watch(false, a, N));
 
-	public static int watch(boolean watchGreen, String[] a, int N) {
+        System.out.println(sb);
+    }
 
-		int[] dx = { 1, 0, -1, 0 };
-		int[] dy = { 0, -1, 0, 1 };
+    public static int watch(boolean watchGreen, String[] a, int N) {
+        int[][] visited = new int[N][N];
+        Queue<int[]> q = new ArrayDeque<>();
+        q.offer(new int[]{0, 0});
 
-		Queue<Integer> q = new ArrayDeque<>(); // x,y 각각 enqueue
+        int cnt = 0;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                char color = 0;
+                if (visited[i][j] == 0) {
+                    q.offer(new int[]{j, i});
+                    color = a[i].charAt(j);
 
-		q.offer(0); // 초기 x좌표
-		q.offer(0); // 초기 y좌표
+                    if (!watchGreen && color == 'G') color = 'R';
 
-		int cnt = 0;
+                    visited[i][j] = ++cnt;
+                }
 
-		int[][] visited = new int[N][N];
+                while (!q.isEmpty()) {
+                    int[] cur = q.poll();
+                    int x = cur[0];
+                    int y = cur[1];
 
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
+                    for (int k = 0; k < 4; k++) {
+                        int nx = x + dx[k];
+                        int ny = y + dy[k];
 
-				char color = 0;
-				if (visited[i][j] == 0) {
-					q.offer(j); // x
-					q.offer(i); // y
-					color = a[i].charAt(j);
+                        if (0 <= nx && nx < N && 0 <= ny && ny < N && visited[ny][nx] == 0) {
+                            char tmpColor = a[ny].charAt(nx);
 
-					if (!watchGreen && color == 'G')
-						color = 'R';
+                            if (!watchGreen && tmpColor == 'G') tmpColor = 'R';
 
-					visited[i][j] = ++cnt;
-				}
+                            if (tmpColor == color) {
+                                q.offer(new int[]{nx, ny});
+                                visited[ny][nx] = cnt;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-				while (!q.isEmpty()) {
-					int x = q.poll();
-					int y = q.poll();
-
-					for (int k = 0; k < 4; k++) {
-						int moveX = x + dx[k];
-						int moveY = y + dy[k];
-
-						if (0 <= moveX && moveX < N && 0 <= moveY && moveY < N && visited[moveY][moveX] == 0) {
-							char tmpColor = a[moveY].charAt(moveX);
-
-							if (!watchGreen && tmpColor == 'G')
-								tmpColor = 'R';
-
-							if (tmpColor == color) {
-								q.offer(moveX);
-								q.offer(moveY);
-								visited[moveY][moveX] = cnt;
-							}
-						}
-					}
-				}
-
-			}
-		}
-
-		return cnt;
-	}
+        return cnt;
+    }
 
 }
