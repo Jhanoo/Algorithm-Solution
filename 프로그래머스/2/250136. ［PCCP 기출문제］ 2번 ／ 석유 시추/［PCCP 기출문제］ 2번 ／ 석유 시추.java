@@ -23,7 +23,7 @@ class Solution {
                     visited[i][j] = true;
                     continue;
                 }
-                // if (land[i][j] == 1)
+                
                 bfs(land, i, j);
             }
         }
