@@ -4,7 +4,7 @@ class Solution {
     
     private static int N, M;
     private static boolean[][] visited;
-    private static Map<Integer, Integer> oils;
+    private static int[] oils;
     
     private static int[] dr = { 1, -1, 0, 0 };
     private static int[] dc = { 0, 0, 1, -1 };
@@ -14,7 +14,7 @@ class Solution {
         M = land[0].length;
         
         visited = new boolean[N][M];
-        oils = new HashMap<>();
+        oils = new int[M];
             
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
@@ -28,7 +28,10 @@ class Solution {
             }
         }
         
-        int answer = Collections.max(oils.values());
+        int answer = 0;
+        
+        for (int oil : oils) 
+            answer = Math.max(answer, oil);
         
         return answer;
     }
@@ -62,8 +65,8 @@ class Solution {
             }
         }
         
-        for (Integer key : cols) {
-            oils.put(key, oils.getOrDefault(key, 0) + cnt);
+        for (Integer i : cols) {
+            oils[i] += cnt;
         }
         
         return;
